@@ -1,0 +1,22 @@
+input {
+        beats {
+                port => 5044
+                host => "10.0.0.122"               #elk private ip
+        }
+}
+filter {
+        grok {
+                match => { "message" => "%{IPORHOST:remote_ip}  %{DATA:user_name}" }
+       # date {
+        #        match => [ "timestamp" , "dd/MMM/YYYY:HH:mm:ss Z" ]
+         #       remove_field => [ "timestamp" ]
+
+        }
+}
+output {
+        elasticsearch {
+                hosts => ["http://localhost:9200"]
+                manage_template => false
+                index => "nginx-index"
+        }
+}
